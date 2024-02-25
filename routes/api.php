@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,7 @@ Route::post('/login', [AuthController::class , 'login']);
 Route::middleware('jwt.verify')->group(function () {
     Route::get('/users', [UserController::class , 'index']);
 });
+
+Route::post('/test', [TestController::class , 'store']);
+
 
