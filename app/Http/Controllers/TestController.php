@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use AshAllenDesign\ShortURL\Classes\Builder;
+use Illuminate\Support\Facades\Log;
 
 class TestController extends Controller
 {
@@ -11,17 +13,23 @@ class TestController extends Controller
 
     public function store(Request $request)
     {
+        $builder = app(Builder::class);
+        $shortURLObject = $builder
+            ->destinationUrl('https://laravel.com')
+            ->singleUse()
+            ->make();
 
-        // Armar un pequeño array con los datos que se van a retornar
-        $persona = [
-            'name' => 'Gerson',
-            'last_name' => 'Lazo',
-            'age' => 30
-        ];
+        $shortURL = $shortURLObject->default_short_url;
+        $keyLength = config('short-url.key_length');
 
-        $datos['data'] = [$persona, $persona];
+        Log::info('Short URL: ' . $shortURL);
+        Log::info('Key Length: ' . $keyLength);
+        Log::info('Generated Key: ' . $shortURLObject->url_key);
 
-
-        return response()->json($datos);
+        return response()->json([
+            'short_url' => $shortURL,
+            'key_length' => $keyLength,
+            'url_key' => $shortURLObject->url_key
+        ]);
     }
 }
